@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Laundry SPA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Vue -->
+  <script src="vuejs/vue.global.js"></script>
+</head>
+<body>
+
+<!-- ======================
+     ROOT SPA
+====================== -->
+<div id="app">
+
+  <!-- LOGIN -->
+  <login-component
+    v-if="!isLogin"
+    @login-success="onLoginSuccess">
+  </login-component>
+
+  <!-- MAIN APP -->
+  <div v-else class="app-wrapper">
+
+    <div class="sidebar">
+      <h3>Mini Laundry</h3>
+      <ul>
+        <li :class="{active: activePage==='dashboard'}"
+            @click="activePage='dashboard'">Dashboard</li>
+        <li :class="{active: activePage==='transactions'}"
+            @click="activePage='transactions'">
+            Transaksi
+        </li>
+        <li :class="{active: activePage==='pickups'}"
+            @click="activePage='pickups'">
+            Pengambilan
+        </li>
+
+        <li v-if="user.role==='Admin'"
+            :class="{active: activePage==='users'}"
+            @click="activePage='users'">User Management</li>
+
+        <li :class="{active: activePage==='profile'}"
+            @click="activePage='profile'">Profile</li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <div class="header">
+        <div class="title">{{ pageTitle }}</div>
+        <div class="user-info">
+          {{ user.full_name }} ({{ user.role }})
+          <span class="logout" @click="logout">Logout</span>
+        </div>
+      </div>
+
+      <div class="content">
+        <dashboard-component
+          v-if="activePage==='dashboard'"
+          :user="user">
+        </dashboard-component>
+
+        <profile-component
+          v-if="activePage==='profile'"
+          :user="user">
+        </profile-component>
+
+        <users-component
+          v-if="activePage==='users' && user.role==='Admin'">
+        </users-component>
+
+        <transactions-component v-if="activePage==='transactions'"></transactions-component>
+        <pickups-component v-if="activePage==='pickups'"></pickups-component>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================
+     TEMPLATE SECTION
+====================== -->
+
+<template id="login-template">
+  <div class="login-wrapper">
+    <div class="login-card">
+      <h2>Login</h2>
+      <input placeholder="Username" v-model="username">
+      <input type="password" placeholder="Password" v-model="password">
+      <button class="btn" @click="login">Login</button>
+      <p class="error-text" v-if="error">{{ error }}</p>
+    </div>
+  </div>
+</template>
+
+<template id="dashboard-template">
+  <div class="card">
+    <h3>Dashboard</h3>
+    <p>Selamat datang, {{ user.full_name }}</p>
+  </div>
+</template>
+
+<template id="profile-template">
+  <div class="card">
+    <h3>Profile</h3>
+
+    <p>Nama: {{ user.full_name }}</p>
+    <p>Username: {{ user.username }}</p>
+
+    <hr>
+
+    <input type="password" placeholder="Password Lama" v-model="oldPassword">
+    <input type="password" placeholder="Password Baru" v-model="newPassword">
+    <button class="btn" @click="updatePassword">Update Password</button>
+
+    <p class="success-text" v-if="successMessage">{{ successMessage }}</p>
+    <p class="error-text" v-if="errorMessage">{{ errorMessage }}</p>
+  </div>
+</template>
+
+<template id="users-template">
+  <div class="card">
+    <h3>User Management</h3>
+
+    <label for="username">Username</label>
+    <input id="username" placeholder="Username" v-model="username">
+    <label for="password">Password</label>
+    <input id="password" type="password" placeholder="Password" v-model="password">
+    <label for="fullname">Full Name</label>
+    <input id="fullname" placeholder="Full Name" v-model="full_name">
+    <label for="user-role">Role</label>
+    <select id="user-role" name="user-role" v-model="role">
+      <option value="Admin">Admin</option>
+      <option value="Operator">Operator</option>
+    </select>
+    <label for="phone">No HP</label>
+    <input id="phone" placeholder="No HP" v-model="phone">
+
+    <button class="btn" @click="addUsers">
+      {{ id ? 'Update User' : 'Tambah User' }}
+    </button>
+    <button class="btn" v-if="id" @click="resetForm">Batal</button>
+
+    <hr>
+
+    <table width="100%">
+      <tr>
+        <th>Username</th>
+        <th>Full Name</th>
+        <th>Role</th>
+        <th>No HP</th>
+        <th>Aksi</th>
+      </tr>
+      <tr v-for="u in users" :key="u.id">
+        <td>{{ u.username }}</td>
+        <td>{{ u.full_name }}</td>
+        <td>{{ u.role }}</td>
+        <td>{{ u.phone }}</td>
+        <td>
+          <button @click="editUser(u)">Edit</button>
+          <button @click="deleteUser(u.id)">Hapus</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</template>
+
+<template id="transactions-template">
+  <div class="card">
+    <h3>Transaksi Laundry</h3>
+
+    <input placeholder="Nama Pelanggan" v-model="customer_name">
+    <input placeholder="No HP" v-model="customer_phone">
+    <input type="number" step="0.1" placeholder="Berat (kg)" v-model="weight">
+    <input type="number" placeholder="Harga" v-model="price">
+
+    <button class="btn" @click="saveTransaction">Simpan</button>
+
+    <hr>
+
+    <table width="100%">
+      <tr>
+        <th>Tanggal</th>
+        <th>Pelanggan</th>
+        <th>Berat</th>
+        <th>Status</th>
+      </tr>
+      <tr v-for="t in transactions">
+        <td>{{ t.transaction_date }}</td>
+        <td>{{ t.customer_name }}</td>
+        <td>{{ t.weight }} kg</td>
+        <td>{{ t.status }}</td>
+      </tr>
+    </table>
+  </div>
+</template>
+
+<template id="pickups-template">
+  <div class="card">
+    <h3>Pengambilan Laundry</h3>
+
+    <table width="100%">
+      <tr>
+        <th>Pelanggan</th>
+        <th>Status</th>
+        <th>Aksi</th>
+      </tr>
+      <tr v-for="t in transactions">
+        <td>{{ t.customer_name }}</td>
+        <td>{{ t.status }}</td>
+        <td>
+          <button class="btn" v-if="t.status==='Process'"
+                  @click="pickup(t.id)">
+            Ambil
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</template>
+
+<!-- ======================
+     SCRIPT LOADER
+====================== -->
+<script src="js/components/LoginComponent.js"></script>
+<script src="js/components/DashboardComponent.js"></script>
+<script src="js/components/TransactionComponent.js"></script>
+<script src="js/components/PickupsComponent.js"></script>
+<script src="js/components/ProfileComponent.js"></script>
+<script src="js/components/UsersComponent.js"></script>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>

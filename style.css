@@ -1,0 +1,260 @@
+/* =========================
+   SOFT NAVY BLUE THEME
+========================= */
+:root{
+  --primary: #2f3e63;        /* navy utama */
+  --primary-soft: #e9edf5;   /* bg elemen */
+  --primary-light: #f4f6fb;
+  --accent: #5c7cfa;         /* biru soft */
+  --bg: #f7f8fc;
+  --card: #ffffff;
+  --text: #2b2b2b;
+  --muted: #7a7f8a;
+  --border: #e3e6ee;
+
+  --space-xs: 6px;
+  --space-sm: 10px;
+  --space-md: 16px;
+  --space-lg: 24px;
+
+  --radius: 14px;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+}
+
+/* ================= LOGIN ================= */
+.login-wrapper{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:var(--primary-light);
+}
+
+.login-card{
+  width:100%;
+  max-width:380px;
+  background:var(--card);
+  padding:var(--space-lg);
+  border-radius:var(--radius);
+  box-shadow:0 8px 24px rgba(47,62,99,0.08);
+}
+
+.login-card h2{
+  text-align:center;
+  margin-bottom:var(--space-lg);
+  color:var(--primary);
+}
+
+.login-card input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  margin-bottom:var(--space-sm);
+}
+
+.login-card input:focus{
+  outline:none;
+  border-color:var(--accent);
+  background:#f0f4ff;
+}
+
+/* ================= BUTTON ================= */
+.btn{
+  padding:10px 18px;
+  border-radius:var(--radius);
+  border:1px solid var(--primary);
+  background:var(--primary-soft);
+  color:var(--primary);
+  font-size:14px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.btn:hover{
+  background:#dde3f0;
+}
+
+.error-text{ color:#e57373; font-size:13px; margin-top:var(--space-sm); text-align:center;}
+.success-text{ color:#66bb6a; font-size:13px; margin-top:var(--space-sm);}
+
+/* ================= LAYOUT ================= */
+.app-wrapper{ display:flex; min-height:100vh; }
+
+/* SIDEBAR */
+.sidebar{
+  width:240px;
+  background:var(--primary);
+  color:#fff;
+  padding:var(--space-lg) var(--space-md);
+}
+
+.sidebar h3{
+  margin-bottom:var(--space-lg);
+  text-align:center;
+}
+
+.sidebar ul{ list-style:none; }
+
+.sidebar ul li{
+  padding:12px;
+  border-radius:10px;
+  cursor:pointer;
+  margin-bottom:var(--space-sm);
+  transition:0.2s;
+}
+
+.sidebar ul li:hover,
+.sidebar ul li.active{
+  background:rgba(255,255,255,0.15);
+}
+
+/* MAIN */
+.main-content{ flex:1; display:flex; flex-direction:column; }
+
+/* HEADER */
+.header{
+  background:#ffffff;
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.header .title{
+  font-size:18px;
+  font-weight:600;
+  color:var(--primary);
+}
+
+.header .logout{
+  margin-left:10px;
+  color:#d9534f;
+  cursor:pointer;
+}
+
+/* CONTENT */
+.content{ padding:var(--space-lg); flex:1; }
+
+/* ================= CARD ================= */
+.card{
+  background:var(--card);
+  padding:var(--space-lg);
+  border-radius:var(--radius);
+  box-shadow:0 6px 20px rgba(47,62,99,0.06);
+}
+
+.card > * + *{ margin-top:var(--space-md); }
+
+.card h3{
+  color:var(--primary);
+}
+
+/* ================= FORM ================= */
+.card label{
+  font-size:13px;
+  font-weight:600;
+  color:#5f6470;
+  margin-bottom:var(--space-xs);
+  display:block;
+}
+
+.card input,
+.card select{
+  width:100%;
+  padding:10px 12px;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  font-size:14px;
+  margin-bottom:var(--space-sm);
+  background:#fbfcff;
+}
+
+.card input:focus,
+.card select:focus{
+  outline:none;
+  border-color:var(--accent);
+  background:#eef2ff;
+}
+
+.card .btn{
+  margin-right:var(--space-sm);
+  margin-top:var(--space-sm);
+}
+
+/* ================= TABLE ================= */
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:var(--space-md);
+  font-size:14px;
+}
+
+th, td{
+  padding:12px 10px;
+  text-align:left;
+}
+
+th{
+  background:var(--primary-soft);
+  color:var(--primary);
+  font-weight:600;
+}
+
+tr:not(:last-child) td{
+  border-bottom:1px solid #edf0f7;
+}
+
+td button{
+  padding:6px 10px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:#f7f9fd;
+  cursor:pointer;
+}
+
+td button:hover{
+  background:#e5eaf3;
+}
+
+/* HR */
+.card hr{
+  border:none;
+  height:1px;
+  background:#e6e9f2;
+  margin:var(--space-lg) 0;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width:768px){
+  .app-wrapper{ flex-direction:column; }
+
+  .sidebar{
+    width:100%;
+    display:flex;
+    overflow-x:auto;
+  }
+
+  .sidebar ul{
+    display:flex;
+    gap:8px;
+  }
+
+  .sidebar ul li{
+    white-space:nowrap;
+  }
+}
